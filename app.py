@@ -5,7 +5,7 @@ import json
 import time
 
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-1.5-pro')
 
 st.set_page_config(
     page_title="CIVICLAW — Legal Intelligence",
