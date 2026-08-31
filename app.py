@@ -223,13 +223,13 @@ if analyze:
             }
             """
 
-            response = models.generate_content(
-                model="gemini-3.6-flash",
-                contents=[system_instruction_text, case_text],
-                GenerateContentConfig={
-                    "response_mime_type": "application/json",
-                    "temperature"= 0.2
-                }
+           response = model.generate_content(
+    case_text,
+    generation_config={
+        "response_mime_type": "application/json",
+        "temperature": 0.2
+    }
+)
             )
             st.session_state.analysis_data = json.loads(response.text)
             st.session_state.analyzed = True
