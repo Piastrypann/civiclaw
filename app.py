@@ -133,7 +133,7 @@ st.markdown("""
 # =========================================================
 
 # API Key membaca dari secrets.toml dulu, jika tidak ada memakai kunci langsung di bawah ini:
-HARDCODED_KEY = "AIzaSyCN5_zf4cF-cLPPYSNupmh3KwWGUHmm56g"  # <-- Masukkan API Key kamu di sini!
+HARDCODED_KEY = ""  # <-- Masukkan API Key kamu di sini!
 api_key = st.secrets.get("GEMINI_API_KEY", HARDCODED_KEY)
 
 # =========================================================
