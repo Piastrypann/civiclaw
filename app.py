@@ -5,7 +5,7 @@ import json
 import time
 
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-model = genai.GenerativeModel('models/gemini-pro')
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 st.set_page_config(
     page_title="CIVICLAW — Legal Intelligence",
@@ -221,15 +221,17 @@ if analyze:
             
             prompt_full = f"{system_instruction}\n\nCase to analyze:\n{case_text}"
             
-            response = model.generate_content(
-                prompt_full,
-                generation_config={
-                    "response_mime_type": "application/json",
-                    "temperature": 0.2
-                }
-            )
+            # Pake pemanggilan teks biasa tanpa config response_mime_type JSON biar tidak bentrok versi library lama
+            response = model.generate_content(prompt_full)
             
-            st.session_state.analysis_data = json.loads(response.text)
+            # Parsing bersih dari teks balasan AI
+            raw_text = response.text.strip()
+            if "```json" in raw_text:
+                raw_text = raw_text.split("```json")[1].split("```")[0].strip()
+            elif "```" in raw_text:
+                raw_text = raw_text.split("```")[1].split("```")[0].strip()
+
+            st.session_state.analysis_data = json.loads(raw_text)
             st.session_state.analyzed = True
             progress_box.empty()
 
