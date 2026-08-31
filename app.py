@@ -221,7 +221,7 @@ if analyze:
             prompt_full = f"{system_instruction}\n\nCase to analyze:\n{case_text}"
             
             response = client.models.generate_content(
-                model="gemini-2.5-flash",
+                model="gemini-3.7-flash",
                 contents=prompt_full,
             )
             
