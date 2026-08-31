@@ -1,13 +1,11 @@
 import streamlit as st
 import google.generativeai as genai
-genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-model = genai.GenerativeModel('gemini-1.5-flash')
 import os
 import json
 import time
-import streamlit as st
-import google.generativeai as genai
+
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 st.set_page_config(
     page_title="CIVICLAW — Legal Intelligence",
@@ -180,8 +178,6 @@ if analyze:
         st.warning("Please describe your legal situation before proceeding.")
     else:
         try:
-            client = genai.Client(api_key=api_key)
-            
             progress_box = st.empty()
             steps = [
                 ("Understanding situation", 20),
@@ -222,15 +218,19 @@ if analyze:
                 ]
             }
             """
-         response = model.generate_content(
-                    case_text,
-                    generation_config={
-                        "response_mime_type": "application/json",
-                        "temperature": 0.2
-                    }
-                )
-                st.session_state.analysis_data = json.loads(response.text)
-                st.session_state.analyzed = True
+            
+            prompt_full = f"{system_instruction}\n\nCase to analyze:\n{case_text}"
+            
+            response = model.generate_content(
+                prompt_full,
+                generation_config={
+                    "response_mime_type": "application/json",
+                    "temperature": 0.2
+                }
+            )
+            
+            st.session_state.analysis_data = json.loads(response.text)
+            st.session_state.analyzed = True
             progress_box.empty()
 
         except Exception as e:
@@ -251,7 +251,7 @@ if st.session_state.analyzed and st.session_state.analysis_data:
         report_text += f"- {statute}\n"
     report_text += "\n--- REKOMENDASI LANGKAH TAKTIS ---\n"
     for action in data.get("action_plan", []):
-        report_text += f"[{action.get('number')}] {action.title if hasattr(action, 'title') else action.get('title')}\n{action.get('description')}\n\n"
+        report_text += f"[{action.get('number')}] {action.get('title')}\n{action.get('description')}\n\n"
 
     st.markdown("""
     <div class="section-header">
