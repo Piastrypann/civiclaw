@@ -220,10 +220,22 @@ if analyze:
             
             prompt_full = f"{system_instruction}\n\nCase to analyze:\n{case_text}"
             
-            response = client.models.generate_content(
-                model="gemini-3.7-flash",
-                contents=prompt_full,
-            )
+            # Sistem Fallback Otomatis untuk mengatasi error 503 (High Demand)
+            models_to_try = ["gemini-3.7-flash", "gemini-3.6-flash", "gemini-2.5-flash"]
+            response = None
+            
+            for m in models_to_try:
+                try:
+                    response = client.models.generate_content(
+                        model=m,
+                        contents=prompt_full,
+                    )
+                    break
+                except Exception:
+                    continue
+            
+            if not response:
+                raise Exception("Semua model sedang sibuk (503 Unavailable). Coba beberapa saat lagi.")
             
             raw_text = response.text.strip()
             if "```json" in raw_text:
