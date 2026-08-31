@@ -5,8 +5,8 @@ import os
 import json
 import time
 import streamlit as st
-from google.generativeai as genai
-from google.genai import types
+import google.generativeai as genai
+genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
 st.set_page_config(
     page_title="CIVICLAW — Legal Intelligence",
