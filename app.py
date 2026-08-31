@@ -224,12 +224,12 @@ if analyze:
             """
 
            response = model.generate_content(
-    case_text,
-    generation_config={
-        "response_mime_type": "application/json",
-        "temperature": 0.2
-    }
-)
+                case_text,
+                generation_config={
+                    "response_mime_type": "application/json",
+                     "temperature": 0.2
+                }
+            )
             )
             st.session_state.analysis_data = json.loads(response.text)
             st.session_state.analyzed = True
